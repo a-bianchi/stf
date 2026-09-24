@@ -15,7 +15,13 @@ x-stf: &stf
 x-http: &http
   <<: *stf
   healthcheck:
-    test: [CMD, node, -e, "require('net').connect(7100, '127.0.0.1').on('connect', () => process.exit(0)).on('error', () => process.exit(1))"]
+    test:
+      [
+        CMD,
+        node,
+        -e,
+        "require('net').connect(7100, '127.0.0.1').on('connect', () => process.exit(0)).on('error', () => process.exit(1))",
+      ]
     interval: 5s
     timeout: 5s
     retries: 36
@@ -23,7 +29,13 @@ x-http: &http
 x-triproxy: &triproxy
   <<: *stf
   healthcheck:
-    test: [CMD, node, -e, "require('net').connect(7112, '127.0.0.1').on('connect', () => process.exit(0)).on('error', () => process.exit(1))"]
+    test:
+      [
+        CMD,
+        node,
+        -e,
+        "require('net').connect(7112, '127.0.0.1').on('connect', () => process.exit(0)).on('error', () => process.exit(1))",
+      ]
     interval: 5s
     timeout: 5s
     retries: 36
@@ -161,10 +173,9 @@ services:
       - "192.168.88.252:7400-7500:7400-7500"
 
   proxy:
-    image: nginx:stable-alpine
+    context: .
+    dockerfile: docker/compose/Dockerfile.nginx
     restart: ${STF_RESTART_POLICY:-unless-stopped}
-    volumes:
-      - ./docker/compose/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "192.168.88.252:7100:7100"
     depends_on:
