@@ -173,8 +173,9 @@ services:
       - "192.168.88.252:7400-7500:7400-7500"
 
   proxy:
-    context: .
-    dockerfile: docker/compose/Dockerfile.nginx
+    build:
+      context: .
+      dockerfile: docker/compose/Dockerfile.nginx
     restart: ${STF_RESTART_POLICY:-unless-stopped}
     ports:
       - "192.168.88.252:7100:7100"
